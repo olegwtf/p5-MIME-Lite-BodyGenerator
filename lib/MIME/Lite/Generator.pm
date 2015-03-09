@@ -272,3 +272,69 @@ sub get_encoded_chunk_nodata {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+MIME::Lite::Generator - generate email created with MIME::Lite chunk by chunk, in memory-efficient way
+
+=head1 SYNOPSIS
+
+	use MIME::Lite;
+	use MIME::Lite::Generator;
+	
+	my $msg = MIME::Lite->new(
+		From    => 'root@cpan.org',
+		To      => 'root@somewhere.com',
+		Subject => 'This is message with big attachment',
+		Type    => 'multipart/mixed'
+	);
+	$msg->attach(Type => 'TEXT', Data => 'See my video in attachment');
+	$msg->attach(Path => '/home/kate/hot-video.1gb.mpg', Disposition => 'attachment', Encoding => 'base64');
+	# MIME::Lite is efficient enough, file is not readed in the memory
+	
+	# And now generate our email chunk by chunk
+	# without reading whole file into memory
+	my $msg_generator = MIME::Lite::Generator->new($msg);
+	while (my $str_ref = $msg_generator->get()) {
+		print $$str_ref;
+	}
+
+=head1 DESCRIPTION
+
+C<MIME::Lite> is a good tool to generate emails. It efficiently works with attachments without reading whole
+file into memory. But the only way to get generated email in memory-efficient way is to call C<print> method.
+C<print> is good enough to write content to the files or other blocking handles. But what if we want to write
+content to non-blocking socket? C<print> will fail when socket will become non-writable. Or we may want to write
+inside some event loop. C<MIME::Lite::Generator> fixes this problem. Now we can generate email chunk by chunk in
+small portions (< 4 kb each) and get result as a string.
+
+=head1 METHODS
+
+=head2 new($msg, $is_smtp=0)
+
+Constructs new C<MIME::Lite::Generator> object. C<$msg> is C<MIME::Lite> object. For C<$is_smtp> description see
+L<MIME::Lite>.
+
+=head2 get()
+
+Gets new chunk of the email and returns it as reference to a string. Each chunk has size less than 4 kb. If there
+is no more data available it will return C<undef>.
+
+=head1 SEE ALSO
+
+L<MIME::Lite>
+
+=head1 AUTHOR
+
+Oleg G, E<lt>oleg@cpan.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself
+
+=cut
