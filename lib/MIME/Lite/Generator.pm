@@ -294,7 +294,7 @@ MIME::Lite::Generator - generate email created with MIME::Lite chunk by chunk, i
 	);
 	$msg->attach(Type => 'TEXT', Data => 'See my video in attachment');
 	$msg->attach(Path => '/home/kate/hot-video.1gb.mpg', Disposition => 'attachment', Encoding => 'base64');
-	# MIME::Lite is efficient enough, file is not readed in the memory
+	# MIME::Lite is efficient enough, file is not readed into memory
 	
 	# And now generate our email chunk by chunk
 	# without reading whole file into memory
@@ -321,7 +321,7 @@ L<MIME::Lite>.
 
 =head2 get()
 
-Gets new chunk of the email and returns it as reference to a string. Each chunk has size less than 4 kb. If there
+Gets next chunk of the email and returns it as a reference to a string. Each chunk has size less than 4 kb. If there
 is no more data available it will return C<undef>.
 
 =head1 SEE ALSO
