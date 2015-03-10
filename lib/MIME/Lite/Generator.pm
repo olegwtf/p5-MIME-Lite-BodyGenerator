@@ -6,7 +6,7 @@ use Carp;
 use FileHandle;
 use MIME::Lite;
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 sub new {
 	my ( $class, $msg, $is_smtp ) = @_;
