@@ -75,7 +75,7 @@ sub get {
 			}
 			
 			### Boundary at the end
-			return \"\n--$self->{boundary}--\n";
+			return \"\n--$self->{boundary}--\n\n";
 		}
 	}
 	

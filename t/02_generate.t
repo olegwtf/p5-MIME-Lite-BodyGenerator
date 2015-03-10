@@ -3,6 +3,13 @@ use Test::More;
 use MIME::Lite;
 use MIME::Lite::Generator;
 
+sub trim($) {
+	my $str = shift;
+	$str =~ s/^\s+//;
+	$str =~ s/\s+$//;
+	$str;
+}
+
 for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
 	my $msg = MIME::Lite->new(
 		From     => 'me@myhost.com',
@@ -21,7 +28,7 @@ for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
 		$i++;
 	}
 
-	is($gen_data, $msg->as_string, 'simple msg - ' . $encoding);
+	is(trim $gen_data, trim $msg->as_string, 'simple msg - ' . $encoding);
 	ok($i > 1, 'simple msg generated in several iterations - ' . $encoding);
 }
 
@@ -41,7 +48,7 @@ for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
 		$gen_data .= $$str;
 	}
 
-	is($gen_data, $msg->as_string, 'msg with utf8 subject - ' . $encoding);
+	is(trim $gen_data, trim $msg->as_string, 'msg with utf8 subject - ' . $encoding);
 }
 
 for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
@@ -61,7 +68,7 @@ for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
 		$gen_data .= $$str;
 	}
 
-	is($gen_data, $msg->as_string, 'msg with attachment - ' . $encoding);
+	is(trim $gen_data, trim $msg->as_string, 'msg with attachment - ' . $encoding);
 }
 
 for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
@@ -85,7 +92,7 @@ for my $encoding (qw/BINARY 8BIT 7BIT QUOTED-PRINTABLE BASE64/) {
 		$gen_data .= $$str;
 	}
 
-	is($gen_data, $msg->as_string, 'msg with attachment and prepared part - ' . $encoding);
+	is(trim $gen_data, trim $msg->as_string, 'msg with attachment and prepared part - ' . $encoding);
 }
 
 done_testing;
